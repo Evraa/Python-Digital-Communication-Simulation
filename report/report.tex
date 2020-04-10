@@ -54,8 +54,8 @@
 
 \title{Assignment \#1} % Assignment title
 
-\author{Mahmoud Othman Adas ~\small{\texttt{SEC:2, B.N:21}} \\ 
-Evram Youssef ~\small{\texttt{SEC:1, B.N:9}}} % Student name
+\author{Mahmoud Othman Adas ~\{\small{\texttt{SEC:2, B.N:21}\}} \\ 
+Evram Youssef ~\{\small{\texttt{SEC:1, B.N:9}}\}} % Student name
 
 \date{\today} % Due date
 
@@ -83,15 +83,34 @@ Evram Youssef ~\small{\texttt{SEC:1, B.N:9}}} % Student name
 \end{problem}
 
 \subsection*{Answer} 
-Plot \ref{plot:orig} shows the output for the 3 cases.
+Plot \ref{plot:out} shows the output for the 3 cases:
+\begin{itemize}
+	\item The receive filter $h(t)$ is a matched filter with unit energy.
+	\item The receive filter $h(t)$ is not existent (i.e. $h(t) = \delta(t)$).
+	\item The receive filter $h(t)$ has the givent impulse response.
+\end{itemize}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=15cm]{../graphs/orig}
-	\caption{The output of the receive filter for the 3 cases.}
-	\label{plot:orig}
-\end{figure}
+Plot \ref{plot:orig} shows the original signal.
+
+\begin{center}
+	\begin{figure}
+		\centering
+		\includegraphics[scale=.26]{../graphs/out}
+		\caption{The output of the receive filter for the 3 cases.}
+		\label{plot:out}
+	\end{figure}
+\end{center}
+
+\begin{center}
+	\begin{figure}
+		\centering
+		\includegraphics[width=17cm]{../graphs/orig}
+		\caption{The original signal.}
+		\label{plot:orig}
+	\end{figure}
+\end{center}
 \clearpage
+
 %----------------------------------------------------------------------------------------
 \section*{Requirement 3}
 \begin{problem}
