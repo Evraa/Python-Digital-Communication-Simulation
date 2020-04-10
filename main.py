@@ -51,20 +51,19 @@ def plotGraphs (arr1, arr2, title, label1, label2,i):
 def matchedFilter(idx,G_t_n):
     """
     idx: 0 .. unit energy
-    idx: 1 .. no matched filter, convolve with delta(1)
+    idx: 1 .. convolve with delta(1)
     idx: 2 .. matched filter root(3)
     """
     if (idx == 1):
-        # h_t = []
-        # for i in range(len(G_t_n)):
-        #     if (i+1)%10 == 0:
-        #         h_t.append(1)
-        #     else:
-        #         h_t.append(0)
-        h_t = np.ones([len(G_t_n)])
-        
+        h_t = 1
         conv = np.convolve(G_t_n,h_t,'same')
         return conv
+    elif (idx == 0):
+        h_t = np.ones([10])
+        conv = np.convolve(G_t_n,h_t,'same')
+        return conv
+
+
 
 
 def decode(Y_t,count,T):
@@ -123,7 +122,7 @@ if __name__ == "__main__":
 
     Pe = [] #Probability of error
     BER = [] #Bit error rate
-    count = 50 # no of tests/time steps
+    count = 100000 # no of tests/time steps
     T = 1 #Width of each pulse
 
     #Generate random 0/1 samples 
@@ -144,6 +143,7 @@ if __name__ == "__main__":
         #Test the outcome with no matched filter h(t) = delta(t)
         #Type 1 : h(t) = delta(t), ie no Matched filter
         Y_t = matchedFilter(1,G_t_n)
+        
         #NOTE: Y_t is doubled in size now!
         out_t = decode(Y_t,count,T)
         err = findError(out_t,X_t)
