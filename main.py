@@ -62,7 +62,12 @@ def matchedFilter(idx,G_t_n):
         h_t = np.ones([10])
         conv = np.convolve(G_t_n,h_t,'same')
         return conv
-
+    else:
+        h_t = []
+        for i in range (10):
+            h_t.append(i*math.sqrt(3))
+        conv = np.convolve(G_t_n,h_t,'same')
+        return conv
 
 
 
@@ -122,7 +127,7 @@ if __name__ == "__main__":
 
     Pe = [] #Probability of error
     BER = [] #Bit error rate
-    count = 100000 # no of tests/time steps
+    count = 10000 # no of tests/time steps
     T = 1 #Width of each pulse
 
     #Generate random 0/1 samples 
@@ -143,7 +148,7 @@ if __name__ == "__main__":
         #Test the outcome with no matched filter h(t) = delta(t)
         #Type 1 : h(t) = delta(t), ie no Matched filter
         Y_t = matchedFilter(1,G_t_n)
-        
+
         #NOTE: Y_t is doubled in size now!
         out_t = decode(Y_t,count,T)
         err = findError(out_t,X_t)
