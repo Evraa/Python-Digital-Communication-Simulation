@@ -23,10 +23,10 @@ def generatePulses (X_T,width):
     GofT = []
     for i in range (len(X_T)):
         if X_T[i] == 1:
-            for _ in range (10*width):
+            for _ in range (100*width):
                 GofT.append(1)
         else:
-            for _ in range (10*width):
+            for _ in range (100*width):
                 GofT.append(-1)
 
     return GofT
@@ -35,7 +35,7 @@ def generateTimeSteps (elementCount,width):
     '''
     This function returns time steps where output is desired
     '''
-    return np.linspace(0, elementCount, 10*width*elementCount, endpoint=False)
+    return np.linspace(0, elementCount, 100*width*elementCount, endpoint=False)
 
 def plotGraphs (arr1, arr2, title, label1, label2,i):
     
@@ -90,7 +90,7 @@ def decode(Y_t,count,T):
     #             out_t.append(0)
     for i in range (1,1+count):
     
-        idx = (i*10)-1
+        idx = (i*100)-1
         peakValue = Y_t[idx]
         if peakValue > L:
             out_t.append(1)
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     Pe = [] #Probability of error
     BER = [] #Bit error rate
-    count = 10000 # no of tests/time steps
+    count = 50000 # no of tests/time steps
     T = 1 #Width of each pulse
 
     #Generate random 0/1 samples 
@@ -155,7 +155,7 @@ if __name__ == "__main__":
         BER.append(np.sum(err)/count)
         Pe.append(0.5*erfc(1/math.sqrt((1/E_N0))))
 
-    plt.semilogy(Eb_No_dB, Pe,'r',linewidth=2)
+    # plt.semilogy(Eb_No_dB, Pe,'r',linewidth=2)
     plt.semilogy(Eb_No_dB, BER,'-s')
     plt.grid(True)
     plt.legend(('analytical','simulation'))
