@@ -37,7 +37,7 @@ def generateTimeSteps(elementCount, width):
     '''
     This function returns time steps where output is desired
     '''
-    return np.linspace(0, elementCount, 100*width*elementCount, endpoint=False)
+    return np.linspace(0, elementCount, 10*width*elementCount, endpoint=False)
 
 
 def plotGraphs(arr1, arr2, title, label1, label2, i):
@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
     Pe = []  # Probability of error
     BER = []  # Bit error rate
-    count = 10000  # no of tests/time steps
+    count = 300  # no of tests/time steps
     T = 1  # Width of each pulse
 
     # Generate random 0/1 samples
@@ -136,28 +136,63 @@ if __name__ == "__main__":
     # Generate time steps with count*T elements
     T_s = generateTimeSteps(count, T)
 
-    # MAIN LOOP 1:
-    # Matched filter is h(t) = delta(t)
-    for E_N0 in Eb_No:
-        # Generate AWGN
-        var = (1/E_N0)/2
-        W_t = AWGN(len(G_t), 0, var)
-        # add the noise with the appropriate SNR
-        G_t_n = G_t + W_t
-        # Test the outcome with no matched filter h(t) = delta(t)
-        # Type 1 : h(t) = delta(t), ie no Matched filter
-        Y_t = matchedFilter(1, G_t_n)
+    plt.rcParams["figure.figsize"] = (20,20)
+    
+    plt.plot(T_s, G_t)
+    plt.title("Original Signal")
+    plt.ylabel("Volts")
+    plt.xlabel("Time")
+    plt.ylim(-2, 2)
+    plt.savefig("Original Signal")
+    #plt.show()
+    plt.clf()
 
-        # NOTE: Y_t is doubled in size now!
-        out_t = decode(Y_t, count, T)
-        err = findError(out_t, X_t)
-        BER.append(err/count)
-        Pe.append(0.5*erfc(1/math.sqrt((1/E_N0))))
+    for i in range(3):
+        # MAIN LOOP 1:
+        # Matched filter is h(t) = delta(t)
+        for E_N0 in Eb_No:
+            # Generate AWGN
+            var = (1/E_N0)/2
+            W_t = AWGN(len(G_t), 0, var)
+            # add the noise with the appropriate SNR
+            G_t_n = G_t + W_t
+            # Test the outcome with no matched filter h(t) = delta(t)
+            # Type 1 : h(t) = delta(t), ie no Matched filter
+            Y_t = matchedFilter(i, G_t_n)
 
-    # plt.semilogy(Eb_No_dB, Pe,'r',linewidth=2)
-    plt.semilogy(Eb_No_dB, BER,'-s')
-    plt.grid(True)
-    plt.legend(('analytical', 'simulation'))
-    plt.xlabel('Eb/No (dB)')
-    plt.ylabel('BER')
-    plt.show()
+            # NOTE: Y_t is doubled in size now!
+            out_t = decode(Y_t, count, T)
+            err = findError(out_t, X_t)
+            BER.append(err/count)
+            Pe.append(0.5*erfc(1/math.sqrt((1/E_N0))))
+
+        #Plot the output signal
+        out_t_pulses = generatePulses(out_t, T)
+        plt.subplot(2,1,1)
+        plt.plot(T_s, out_t_pulses)
+        plt.title("Received Signal")
+        plt.ylabel("Volts")
+        plt.xlabel("Time")
+        plt.ylim(-2, 2)
+        #Plot BRE and Pe
+        plt.subplot(2,1,2)
+        plt.semilogy(Eb_No_dB, BER,'-s')
+        plt.semilogy(Eb_No_dB, Pe,'g',linewidth=2)
+        plt.grid(True)
+        plt.legend(('BER','PE'))
+        plt.xlabel('Eb/No (dB)')
+        plt.ylabel('BER')
+        title = ""
+        if (i == 0):
+            title+= "BER with MF: Unit Energy"
+        elif i==1:
+            title+="BER with MF: delta(t)"
+        else:
+            title += "BER with MF: sqrt(3)"
+        plt.title(title)
+        plt.show()
+        #plt.savefig("Receiver"+str(i))
+        plt.clf()
+        BER.clear()
+        Pe.clear()
+
